@@ -4,6 +4,8 @@ shootingserver
 
 pbsk-functional-shootingのserver実装
 
+.. image:: https://drone.io/github.com/pocketberserker/shootingserver/status.png
+
 ビルド・実行環境
 -------------------
 
