@@ -3,4 +3,4 @@
 -export([start/0]).
 
 start() ->
-    application:start(shootingserver).
+    {ok, _} = application:ensure_all_started(shootingserver).

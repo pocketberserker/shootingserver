@@ -1,17 +1,21 @@
 -module(shootingserver_app).
-
 -behaviour(application).
 
-%% Application callbacks
--export([start/2, stop/1]).
+%% API.
+-export([start/2]).
+-export([stop/1]).
 
-%% ===================================================================
-%% Application callbacks
-%% ===================================================================
-
-start(_StartType, _StartArgs) ->
-    ok = shootingserver_cowboy:start(),
+start(_Types, _Args) ->
+    Dispatch = cowboy_router:compile([
+        {'_', [
+            {"/shooting", shooting_handler, []}
+        ]}
+    ]),
+    {ok, _} = cowboy:start_http(http, 100, [{port, 19680}],
+        [env, {dispatch, Dispatch}]
+    ),
     shootingserver_sup:start_link().
 
 stop(_State) ->
     ok.
+

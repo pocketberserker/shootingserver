@@ -1,15 +1,14 @@
 -module(shooting_handler).
--export([init/3]).
 
--export([websocket_init/3, websocket_handle/3,
-         websocket_info/3, websocket_terminate/3]).
+-export([init/2]).
+-export([
+         websocket_handle/3,
+         websocket_info/3
+        ]).
 
-init({tcp, http}, _Req, _Opts) ->
-    {upgrade, protocol, cowboy_websocket}.
-
-websocket_init(_Any, Req, _Opts) ->
+init(Req, _Opts) ->
     Interval = round(1000 / 30),
-    timer:send_interval(Interval, tick),
+    {ok, _} = timer:send_interval(Interval, tick),
     Req2 = cowboy_req:compact(Req),
     {ok, Req2, {{0, 0}, []}, hibernate}.
 
@@ -29,9 +28,6 @@ websocket_info(tick, Req, {{X, Y}, Bullets}) ->
     {reply, {text, Data}, Req, {{X, Y}, NewBullets}, hibernate};
 websocket_info(_Info, Req, State) ->
     {ok, Req, State, hibernate}.
-
-websocket_terminate(_Reason, _Req, _State) ->
-    ok.
 
 update_bullets(Bullets) ->
     Updated = lists:map(fun({X, Y}) -> {X, Y - 20} end, Bullets),
