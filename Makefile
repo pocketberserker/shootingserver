@@ -33,7 +33,7 @@ eunit:
 dialyze-init:
 	dialyzer --build_plt --apps erts kernel stdlib mnesia crypto public_key snmp reltool
 	dialyzer --add_to_plt --plt ~/.dialyzer_plt --output_plt $(APP).plt -c .
-	dialyzer -c ebin -Wunmatched_returns -Werror_handling -Wrace_conditions -Wunderspecs
+	dialyzer -c ebin $(DIALYZER_OPTS)
 
 dialyze: compile
 	dialyzer --check_plt --plt $(APP).plt -c .
