@@ -1,6 +1,6 @@
 language: erlang
 sudo: false
-script: "make"
+script: ./rebar3 eunit
 otp_release:
   - 17.0
   - 17.4
