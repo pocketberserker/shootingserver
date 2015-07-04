@@ -1,6 +1,6 @@
 language: erlang
 sudo: false
-script: "make && make dialyze-init && make dialyze"
+script: "make"
 otp_release:
   - 17.0
   - 17.4
