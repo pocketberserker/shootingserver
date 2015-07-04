@@ -2,43 +2,28 @@ APP=shootingserver
 
 .PHONY: all compile deps clean distclean
 
-all: deps compile eunit
+all: compile xref eunit
 
 DIALYZER_OPTS=-Werror_handling -Wrace_conditions -Wunmatched_returns
 
 init:
-	@./rebar get-deps compile
-
-deps: update-deps get-deps
-
-update-deps:
-	@./rebar get-deps
+	@./rebar3 compile
 
 compile:
-	@./rebar compile skip_deps=true
+	@./rebar3 as dev compile
 
-get-deps:
-	@./rebar get-deps
+xref:
+	@./rebar3 xref
 
 clean:
-	@./rebar clean skip_deps=true
-
-distclean: clean
-	@./rebar clean
-	@./rebar delete-deps
+	@./rebar3 clean
 
 eunit:
-	@./rebar eunit skip_deps=true
+	@./rebar3 eunit
 
-dialyze-init:
-	dialyzer --build_plt --apps erts kernel stdlib mnesia crypto public_key snmp reltool
-	dialyzer --add_to_plt --plt ~/.dialyzer_plt --output_plt $(APP).plt -c .
-	dialyzer -c ebin $(DIALYZER_OPTS)
-
-dialyze: compile
-	dialyzer --check_plt --plt $(APP).plt -c .
-	dialyzer -c ebin
+dialyze:
+	@./rebar3 dialyzer
 
 create_app:
-	@./rebar create-app appid=$(APP) skip_deps=true
+	@./rebar3 new app $(APP)
 
